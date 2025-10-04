@@ -18,30 +18,37 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-wrapper">
+    <div
+      className="login-wrapper"
+      style={{
+        backgroundImage: "url('/images/femmes-champ.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="welcome-section">
-        <h1>🌿 Assistant Agricole Intelligent</h1>
-        <p>Optimise tes plantations, anticipe la météo, et dialogue avec ton jardin.</p>
-        <blockquote>“La terre ne ment jamais.” – Émile Zola</blockquote>
+        <h1>🌿 Farmer Women 🌿 </h1>
+        <p>  An intelligent agricultural assistant that empowers you to care for your plants, plan with confidence, stay ahead of the weather, and grow with guidance .</p>
       </div>
 
       <div className="login-box">
         <h2>Connexion</h2>
         <input
           type="email"
-          placeholder="Email"
+          placeholder="your mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
-          placeholder="Mot de passe"
+          placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <div className="button-group">
-          <button onClick={handleLogin}>Se connecter</button>
-          <button onClick={goToRegister}>Créer un compte</button>
+          <button onClick={handleLogin}>sign in</button>
+          <button onClick={goToRegister}>sign up</button>
         </div>
       </div>
     </div>

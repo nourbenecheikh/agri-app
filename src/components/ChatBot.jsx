@@ -1,30 +1,36 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
-function ChatBot() {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+function Chatbot() {
+  const [userInput, setUserInput] = useState('');
+  const [botReply, setBotReply] = useState('');
 
-  const handleAsk = async () => {
-    const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: question }],
-    }, {
-      headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-      },
+  const handleSend = async () => {
+    const res = await fetch('/api/chatbot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userInput })
     });
 
-    setAnswer(response.data.choices[0].message.content);
+    const data = await res.json();
+    setBotReply(data.reply);
   };
 
   return (
-    <div>
-      <input value={question} onChange={(e) => setQuestion(e.target.value)} />
-      <button onClick={handleAsk}>Demander</button>
-      <p>{answer}</p>
+    <div className="chatbot">
+      <textarea
+        value={userInput}
+        onChange={(e) => setUserInput(e.target.value)}
+        placeholder="Pose ta question ici..."
+      />
+      <button onClick={handleSend}>Envoyer</button>
+
+      {botReply && (
+        <div className="bot-reply">
+          <strong>🤖 Réponse :</strong> {botReply}
+        </div>
+      )}
     </div>
   );
 }
 
-export default ChatBot;
+export default Chatbot;

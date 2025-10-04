@@ -1,32 +1,43 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
-function PlantDiagnosis() {
-  const [image, setImage] = useState(null);
+function DiagnosisForm() {
+  const [selectedFile, setSelectedFile] = useState(null);
   const [result, setResult] = useState(null);
 
-  const handleUpload = (e) => setImage(e.target.files[0]);
+  const handleFileChange = (e) => setSelectedFile(e.target.files[0]);
 
-  const handleAnalyze = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formData = new FormData();
-    formData.append('image', image);
+    formData.append('plantImage', selectedFile);
 
-    const response = await axios.post('https://api.plant.id/v2/identify', formData, {
-      headers: {
-        'Api-Key': process.env.REACT_APP_PLANT_ID_API_KEY,
-      },
+    const res = await fetch('/api/diagnosis/image', {
+      method: 'POST',
+      body: formData
     });
 
-    setResult(response.data);
+    const data = await res.json();
+    setResult(data);
   };
 
   return (
     <div>
-      <input type="file" onChange={handleUpload} />
-      <button onClick={handleAnalyze}>Analyser</button>
-      {result && <div>{result.suggestions[0].plant_name}</div>}
+      <form onSubmit={handleSubmit}>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <button type="submit">Diagnostiquer</button>
+      </form>
+
+      {result && (
+        <div>
+          <h3>🌿 Diagnostic</h3>
+          <p><strong>Plante :</strong> {result.plant_type}</p>
+          <p><strong>État :</strong> {result.health_status}</p>
+          <p><strong>Maladie :</strong> {result.disease}</p>
+          <p><strong>Conseil :</strong> {result.recommendation}</p>
+        </div>
+      )}
     </div>
   );
 }
 
-export default PlantDiagnosis;
+export default DiagnosisForm;
